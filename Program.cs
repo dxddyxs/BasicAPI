@@ -72,4 +72,18 @@ app.MapPatch("/tasks/{id}", (int id) =>
     return Results.Ok(task);
 });
 
+app.MapDelete("/tasks/{id}", (int id) =>
+{
+    var task = tasks.FirstOrDefault(t => t.Id == id);
+
+    if (task == null)
+    {
+        return Results.NotFound();
+    }
+
+    tasks.Remove(task);
+
+    return Results.Ok($"Removed!");
+});
+
 app.Run();

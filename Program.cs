@@ -58,4 +58,18 @@ app.MapPut("/tasks/{id}", (int id, Tasks taskAtt) =>
     return Results.Ok(task);
 });
 
+app.MapPatch("/tasks/{id}", (int id) =>
+{
+    var task = tasks.FirstOrDefault(t => t.Id == id);
+
+    if (task == null)
+    {
+        return Results.NotFound();
+    }
+
+    task.Done = true;
+
+    return Results.Ok(task);
+});
+
 app.Run();

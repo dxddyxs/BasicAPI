@@ -31,4 +31,16 @@ app.MapPost("/tasks", (Tasks task) =>
     return Results.Ok($"{task} successfully added");
 });
 
+app.MapGet("/taks/{id}", (int id) =>
+{
+    var task = tasks.FirstOrDefault(t => t.Id == id);
+
+    if (task == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(task);
+});
+
 app.Run();

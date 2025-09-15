@@ -43,6 +43,14 @@ app.MapGet("/tasks/{id}", (int id) =>
     return Results.Ok(task);
 });
 
+app.MapGet("/tasks/status/{isComplete}", (bool isComplete) =>
+{
+    // Filtra as tarefas pelo status
+    var filteredItems = tasks.Where(t => t.Done == isComplete).ToList();
+
+    return Results.Ok(filteredItems);
+});
+
 app.MapPut("/tasks/{id}", (int id, Tasks taskAtt) =>
 {
     var task = tasks.FirstOrDefault(t => t.Id == id);
@@ -53,6 +61,7 @@ app.MapPut("/tasks/{id}", (int id, Tasks taskAtt) =>
     }
 
     task.Name = taskAtt.Name;
+    task.Description = taskAtt.Description;
     task.Done = taskAtt.Done;
 
     return Results.Ok(task);

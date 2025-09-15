@@ -31,6 +31,19 @@ app.MapPost("/tasks", (Tasks task) =>
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
+app.MapGet("/tasks/search", (string name) =>
+{
+    if (string.IsNullOrEmpty(name))
+    {
+        return Results.BadRequest();
+    }
+    //search for tasks that contain the term (case sensitive / ignorando maiusculas e minusculas) 
+    var foundTasks = tasks.Where(t => t.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    // results
+    return Results.Ok(foundTasks);
+});
+
 app.MapGet("/tasks/{id}", (int id) =>
 {
     var task = tasks.FirstOrDefault(t => t.Id == id);
@@ -45,10 +58,17 @@ app.MapGet("/tasks/{id}", (int id) =>
 
 app.MapGet("/tasks/status/{isComplete}", (bool isComplete) =>
 {
-    // Filtra as tarefas pelo status
+    // Filtra as tarefas pelo status,  where = retorna uma lista
     var filteredItems = tasks.Where(t => t.Done == isComplete).ToList();
 
     return Results.Ok(filteredItems);
+});
+
+app.MapGet("/tasks/count/{isComplete}", (bool isComplete) =>
+{
+    var count = tasks.Count(t => t.Done == isComplete);
+
+    return Results.Ok(new { count = count });
 });
 
 app.MapPut("/tasks/{id}", (int id, Tasks taskAtt) =>

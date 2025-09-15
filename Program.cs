@@ -44,6 +44,18 @@ app.MapGet("/tasks/search", (string name) =>
     return Results.Ok(foundTasks);
 });
 
+app.MapGet("/tasks/description", (string term) =>
+{
+    if (string.IsNullOrEmpty(term))
+    {
+        return Results.BadRequest();
+    }
+
+    var foundTasks = tasks.Where(t => t.Description.Contains(term, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    return Results.Ok(foundTasks);
+});
+
 app.MapGet("/tasks/{id}", (int id) =>
 {
     var task = tasks.FirstOrDefault(t => t.Id == id);
